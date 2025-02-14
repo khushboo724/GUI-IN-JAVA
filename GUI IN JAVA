@@ -1,0 +1,234 @@
+package Connector;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+public class ProgramLauncher extends JFrame { // This line declares the ProgramLauncher class, which extends JFrame , making it a window with a title bar and border.
+    
+    public ProgramLauncher() { // This is the constructor for the ProgramLauncher class.
+        
+        setTitle("Program Launcher"); // Sets the title of the window to "Program Launcher".
+        setSize(400, 300); // Sets the size of the window to 400 pixels wide and 300 pixels tall.
+        setLayout(new FlowLayout()); // Sets the layout manager to FlowLayout , which arranges components in a left-to-right flow.
+        setLocationRelativeTo(null); // Centers the window on the screen.
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Specifies that the application should exit when the window is closed.
+        
+        String[] programs = {"Select a program", "BMI Calculator", "Temperature Converter", "Currency Converter (Rupees to USD)", "Bill Splitter Pro", "Simple Interest Calculator"};
+        
+        JComboBox<String> programComboBox = new JComboBox<>(programs); // Creates a combo box (JComboBox) with the program names.
+        
+        
+        programComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                int selectedIndex = cb.getSelectedIndex();
+                switch (selectedIndex) {
+                    case 1 -> // BMI Calculator
+                        new BMICalculator().setVisible(true);
+                    case 2 -> // Temperature Converter
+                        new TemperatureConverter().setVisible(true);
+                    case 3 -> // Currency Converter
+                        new CurrencyConverter().setVisible(true);
+                    case 4 -> // Bill Splitter
+                        new BillSplitter().setVisible(true);
+                    case 5 -> // Simple Interest Calculator
+                        new SimpleInterestCalculator().setVisible(true);
+                    default -> {
+                    }
+                }
+                // No action or display a message
+            }
+        });
+         add(programComboBox); // Adds the combo box to the window.
+
+        setVisible(true); // Makes the window visible.
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new ProgramLauncher().setVisible(true));
+    }
+}
+
+
+class BMICalculator extends JFrame {
+    public BMICalculator() {
+        setTitle("BMI Calculator");
+        setSize(300, 200);
+        setLayout(new FlowLayout());
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JLabel weightLabel = new JLabel("Weight (kg):");
+        JTextField weightField = new JTextField(10);
+        JLabel heightLabel = new JLabel("Height (m):");
+        JTextField heightField = new JTextField(10);
+        JButton calculateButton = new JButton("Calculate BMI");
+        JLabel bmiLabel = new JLabel("BMI: ");
+
+        add(weightLabel);
+        add(weightField);
+        add(heightLabel);
+        add(heightField);
+        add(calculateButton);
+        add(bmiLabel);
+
+        calculateButton.addActionListener(e -> {
+            double weight = Double.parseDouble(weightField.getText());
+            double height = Double.parseDouble(heightField.getText());
+            double bmi = weight / (height * height);
+            bmiLabel.setText("BMI: " + String.format("%.2f", bmi));
+        });
+    }
+}
+
+class TemperatureConverter extends JFrame {
+    public TemperatureConverter() {
+        setTitle("Temperature Converter");
+        setSize(300, 200);
+        setLayout(new FlowLayout());
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JLabel inputLabel = new JLabel("Enter Temperature:");
+        JTextField inputField = new JTextField(10);
+        JButton toCelsiusButton = new JButton("To Celsius");
+        JButton toFahrenheitButton = new JButton("To Fahrenheit");
+        JLabel resultLabel = new JLabel("Result: ");
+
+        add(inputLabel);
+        add(inputField);
+        add(toCelsiusButton);
+        add(toFahrenheitButton);
+        add(resultLabel);
+
+        toCelsiusButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double fahrenheit = Double.parseDouble(inputField.getText());
+                double celsius = (fahrenheit - 32) * 5/9;
+                resultLabel.setText("Result: " + celsius + "°C");
+            }
+        });
+
+        toFahrenheitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double celsius = Double.parseDouble(inputField.getText());
+                double fahrenheit = (celsius * 9/5) + 32;
+                resultLabel.setText("Result: " + fahrenheit + "°F");
+            }
+        });
+    }
+}
+
+class CurrencyConverter extends JFrame {
+    public CurrencyConverter() {
+        setTitle("Currency Converter (Rupees to USD)");
+        setSize(350, 200);
+        setLayout(new FlowLayout());
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        add(new JLabel("Rupees:"));
+        JTextField rupeesField = new JTextField(10);
+        add(rupeesField);
+
+        JButton convertButton = new JButton("Convert to USD");
+        add(convertButton);
+
+        JLabel resultLabel = new JLabel("USD: ");
+        add(resultLabel);
+
+        convertButton.addActionListener(e -> {
+            try {
+                double rupees = Double.parseDouble(rupeesField.getText());
+                double usd = rupees * 0.013; 
+                resultLabel.setText(String.format("USD: %.2f", usd));
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid number.");
+            }
+        });
+    }
+}
+
+class BillSplitter extends JFrame {
+    public BillSplitter() {
+        setTitle("Bill Splitter Pro");
+        setSize(350, 200);
+        setLayout(new FlowLayout());
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        add(new JLabel("Total Bill:"));
+        JTextField totalBillField = new JTextField(10);
+        add(totalBillField);
+
+        add(new JLabel("Number of People:"));
+        JTextField numberOfPeopleField = new JTextField(10);
+        add(numberOfPeopleField);
+
+        JButton calculateButton = new JButton("Calculate");
+        add(calculateButton);
+
+        JLabel resultLabel = new JLabel("Amount per Person: ");
+        add(resultLabel);
+
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double totalBill = Double.parseDouble(totalBillField.getText());
+                    int numberOfPeople = Integer.parseInt(numberOfPeopleField.getText());
+                    if (numberOfPeople > 0) {
+                        double amountPerPerson = totalBill / numberOfPeople;
+                        resultLabel.setText(String.format("Amount per Person: $%.2f", amountPerPerson));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Number of people must be greater than 0.");
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter valid numbers.");
+                }
+            }
+        });
+    }
+}
+
+class SimpleInterestCalculator extends JFrame {
+    public SimpleInterestCalculator() {
+        setTitle("Simple Interest Calculator");
+        setSize(300, 200);
+        setLayout(new FlowLayout());
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JTextField principalField = new JTextField(10);
+        JTextField rateField = new JTextField(10);
+        JTextField timeField = new JTextField(10);
+        JButton calculateButton = new JButton("Calculate");
+        JLabel resultLabel = new JLabel("Interest: ");
+
+        add(new JLabel("Principal:"));
+        add(principalField);
+        add(new JLabel("Rate (%):"));
+        add(rateField);
+        add(new JLabel("Time (years):"));
+        add(timeField);
+        add(calculateButton);
+        add(resultLabel);
+
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double principal = Double.parseDouble(principalField.getText());
+                double rate = Double.parseDouble(rateField.getText());
+                double time = Double.parseDouble(timeField.getText());
+                double interest = (principal * rate * time) / 100;
+                resultLabel.setText("Interest: " + interest);
+            }
+        });
+    }
+}
